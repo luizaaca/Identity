@@ -8,9 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Controllers
 {
-    [RequiresPermission("UserManagement.List")]
+    [Authorize]
     public class UserManagementController : Controller
     {
+        [RequiresPermission("UserManagement.List")]
         public IActionResult Index()
         {
             return View();
