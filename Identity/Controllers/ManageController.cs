@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using Identity.Models;
 using Identity.Models.ManageViewModels;
 using Identity.Services;
+using Core.Model.Identity;
 
 namespace Identity.Controllers
 {
@@ -59,8 +60,8 @@ namespace Identity.Controllers
             {
                 Username = user.UserName,
                 Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                IsEmailConfirmed = user.EmailConfirmed,
+                PhoneNumber = "",
+                IsEmailConfirmed = true,
                 StatusMessage = StatusMessage
             };
 
@@ -92,7 +93,7 @@ namespace Identity.Controllers
                 }
             }
 
-            var phoneNumber = user.PhoneNumber;
+            var phoneNumber = "";
             if (model.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
@@ -122,7 +123,7 @@ namespace Identity.Controllers
             }
 
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+            var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
             var email = user.Email;
             await _emailSender.SendEmailConfirmationAsync(email, callbackUrl);
 
@@ -267,7 +268,7 @@ namespace Identity.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var info = await _signInManager.GetExternalLoginInfoAsync(user.Id);
+            var info = await _signInManager.GetExternalLoginInfoAsync(user.Id.ToString());
             if (info == null)
             {
                 throw new ApplicationException($"Unexpected error occurred loading external login info for user with ID '{user.Id}'.");
@@ -319,7 +320,7 @@ namespace Identity.Controllers
             var model = new TwoFactorAuthenticationViewModel
             {
                 HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null,
-                Is2faEnabled = user.TwoFactorEnabled,
+                Is2faEnabled = false,// user.TwoFactorEnabled,
                 RecoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(user),
             };
 
@@ -335,10 +336,10 @@ namespace Identity.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            if (!user.TwoFactorEnabled)
-            {
-                throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.");
-            }
+            //if (!user.TwoFactorEnabled)
+            //{
+            //    throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.");
+            //}
 
             return View(nameof(Disable2fa));
         }
@@ -460,10 +461,10 @@ namespace Identity.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            if (!user.TwoFactorEnabled)
-            {
-                throw new ApplicationException($"Cannot generate recovery codes for user with ID '{user.Id}' because they do not have 2FA enabled.");
-            }
+            //if (!user.TwoFactorEnabled)
+            //{
+            //    throw new ApplicationException($"Cannot generate recovery codes for user with ID '{user.Id}' because they do not have 2FA enabled.");
+            //}
 
             return View(nameof(GenerateRecoveryCodes));
         }
@@ -478,10 +479,10 @@ namespace Identity.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            if (!user.TwoFactorEnabled)
-            {
-                throw new ApplicationException($"Cannot generate recovery codes for user with ID '{user.Id}' as they do not have 2FA enabled.");
-            }
+            //if (!user.TwoFactorEnabled)
+            //{
+            //    throw new ApplicationException($"Cannot generate recovery codes for user with ID '{user.Id}' as they do not have 2FA enabled.");
+            //}
 
             var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
             _logger.LogInformation("User with ID {UserId} has generated new 2FA recovery codes.", user.Id);
