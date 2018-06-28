@@ -62,9 +62,11 @@ namespace Identity.CustomAttributes
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionsAuthorizationRequirement requirement)
         {
-            if(context.User.HasClaim(claim => claim.Type == "permission" && requirement.RequiredPermissions.Contains(claim.Value))){
+            if (requirement.RequiredPermissions.All(p => context.User.HasClaim(claim => claim.Type == "permission" && claim.Value == p)))
                 context.Succeed(requirement);
-            }
+            else
+                context.Fail();
+
             return Task.FromResult(0);
         }
     }
