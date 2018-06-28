@@ -224,7 +224,7 @@ namespace Core.Stores
             if (user == null) throw new ArgumentNullException(nameof(user));
             if (normalizedName == null) throw new ArgumentNullException(nameof(normalizedName));
 
-            user.Name = normalizedName;
+            user.UserName = normalizedName;
 
             return Task.FromResult<object>(null);
         }
