@@ -65,6 +65,8 @@ namespace Identity
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IRoleRepository, RoleRepository>();
+            services.AddTransient<IActionRepository, ActionRepository>();
 
             services.AddMvc();
         }

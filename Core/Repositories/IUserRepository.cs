@@ -13,5 +13,8 @@ namespace Core.Repositories
         Task<IEnumerable<ApplicationUser>> GetAllUsers();
         Task<ApplicationUser> GetUser(int userId);
         Task<ApplicationUser> GetUser(string userName);
+        Task<ApplicationUser> FindUserByEmail(string email);
+        Task<IEnumerable<ApplicationRole>> GetUserRoles(int userId);
+        Task<IdentityResult> AddUserRole(int userId, int roleId);
     }
 }

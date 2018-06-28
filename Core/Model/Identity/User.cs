@@ -25,5 +25,8 @@ namespace Core.Model.Identity
         [Computed]
         [Write(false)]
         public string Name { get; set; }
+        //[Computed]
+        //[Write(false)]
+        //public List<ApplicationRole> Roles { get; set; }
     }
 }
