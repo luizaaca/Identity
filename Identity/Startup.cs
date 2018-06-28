@@ -8,6 +8,7 @@ using Identity.Services;
 using Core.Repositories;
 using Core.Model.Identity;
 using Core.Stores;
+using Core.Security;
 
 namespace Identity
 {
@@ -23,6 +24,8 @@ namespace Identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IPasswordHasher<ApplicationUser>, CustomPasswordHasher<ApplicationUser>>();
+            
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddDefaultTokenProviders();
 

@@ -19,6 +19,7 @@ namespace Identity.Controllers
         {
             _userRepository = userRepository;
         }
+
         [RequiresPermission("UserManagement.List")]
         public async Task<IActionResult> Index()
         {
